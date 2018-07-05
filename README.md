@@ -14,7 +14,7 @@ Installation is quite simple, clone the repository and open vim/gvim. It will au
 
 ### Windows:
       cd C:\Users\<username>
-      rm vimfiles (This deletes your old vim configurations. If you want to keep it, use move instead of rmdir.)
+      rm /s vimfiles (This deletes your old vim configurations. If you want to keep it, use move instead of rmdir.)
       git clone --depth=1 https://github.com/gandhidarshak/myVimrc.git vimfiles
 
 ### Windows with a network HOME drive:

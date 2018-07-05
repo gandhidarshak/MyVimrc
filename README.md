@@ -1,5 +1,5 @@
 ## My Vim Set-up
-This git-repository was created to share my vim set-up with my colleagues for a 'how-to-vim' presentation. It is culmination of my experiments with gvim during past ~10 years of working with spice net-lists and C++/Python codes. 
+This git-repository is created to share my vim set-up with my colleagues for a 'how-to-vim' presentation. It is culmination of my experiments with gvim during past ~10 years of working with spice net-lists and C++/Python codes. 
 
 ## How to install?
 ### Pre-requiste:
@@ -20,10 +20,11 @@ Installation is quite simple, clone the repository and open vim/gvim. It will au
 ### Windows with a network HOME drive:
 If you work in a company where IT set-up is such that a remote network directory is set as your HOME drive in windows then the above steps may not work. You may chose to clone vimfiles folder in your network home but in my experiance, that make vim a bit sluggish and also makes the set-up unavailable when you are not connected with network. 
 
-Alternatively and preferrably, you may want to create/edit system vimrc file and add below line to it. then the steps in previous windows section should work as is for you.
+Alternatively and preferrably, you may want to create/edit system vimrc file and add below two lines to it. then the steps in previous windows section should work as is for you.
 
-      Create/Edit file C:\Program Files (x86)\Vim\vimrc and add below line.
-      exe 'set rtp+=' . expand('C:\users\' . $USERNAME . '\vimfiles')
+      Create/Edit file C:\Program Files (x86)\Vim\vimrc and add below lines.
+      let $HOME = expand('C:\Users\' . $USERNAME)
+      exe 'set rtp+=' . expand( $HOME . '\vimfiles')
 
 ## Bind-keys: 
 Below bind-keys will be readily available once you install the vimrc.

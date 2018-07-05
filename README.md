@@ -1,5 +1,5 @@
 ## My Vim Set-up
-This git-repository was created to share my vim set-up with my colleagues for a 'how-to-vim' presentation. It is culmination of my experiments with vim during past ~10 years of working with spice net-lists and C++/Python codes. 
+This git-repository was created to share my vim set-up with my colleagues for a 'how-to-vim' presentation. It is culmination of my experiments with gvim during past ~10 years of working with spice net-lists and C++/Python codes. 
 
 ## How to install?
 ### Pre-requiste:
@@ -144,5 +144,5 @@ A *shout-out* to all the awesome creators!!
 
 ## Sharing is caring!
 
-I am always looking to improve my vim efficiency by trying new ideas/plugins. And since you are on this page and reached till this point, I am guessing you are a vim enthusiast too. Please feel free to take an idea or two from my vim setup. Or ping me back with your awesome ideas which I might be missing and I have to try them to believe!
+I am always looking to improve my vim efficiency by trying new ideas/plugins. And since you are on this page and reached till this point, I am guessing you are a vim enthusiast too. Please feel free to take an idea or two from my vim setup. Or please ping me back with your awesome ideas which might change my viming forever!
 

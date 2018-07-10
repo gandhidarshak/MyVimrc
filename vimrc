@@ -41,10 +41,6 @@ set hlsearch                   " Highlight all matches
 set incsearch                  " Show incremental search while typing
 set ruler                      " Show the line and column number of the cursor
 set ignorecase                 " Ignore case in search patterns.
-set expandtab                  " Convert Tab into spaces
-set tabstop=3                  " 1 tab = 3 spaces
-set softtabstop=3              " 1 tab = 3 spaces
-set shiftwidth=3               " 1 tab = 3 spaces
 set backspace=indent,eol,start " User friendly backspace,
 set showcmd                    " Show (partial) command in the last line of the screen.
 set wildmenu                   " Show all matches for a file name completion while using Tab
@@ -105,6 +101,7 @@ call plug#begin($VIMPLUGDIRECTORY)
 " Declare the list of plug-ins - can be any valid github url
 " Shorthand notation; fetches https://github.com/...
 Plug 'vim-scripts/DoxygenToolkit.vim'   " Doxygen tool kit for Vim to provide comment templates
+Plug 'ciaranm/detectindent'             " Automatically adjust shiftwidth based on current file
 Plug 'easymotion/vim-easymotion'        " Easy navigation in vim
 Plug 'godlygeek/tabular'                " Tabularize/Align using any string
 Plug 'vim-scripts/taglist.vim'          " Tag List Explorer
@@ -158,6 +155,21 @@ let g:DoxygenToolkit_blockHeader="----------------------------------------------
 let g:DoxygenToolkit_authorName=expand($USER)
 let g:DoxygenToolkit_versionString="1.0"
 let g:DoxygenToolkit_blockFooter="-------------------------------------------------------------------------------"
+
+
+" explandtab
+" When indent cannot be automatically detected 
+let g:detectindent_preferred_indent = 3
+" Limit for number of lines that will be analysed set
+let g:detectindent_max_lines_to_analyse = 1000
+" Prefer expand tab over noexpand tab 
+let g:detectindent_preferred_expandtab = 1
+function! AdjustIndent()
+   :DetectIndent
+   :IndentLinesReset
+   echo 'Setting shiftwidth to: ' &shiftwidth
+endfunction
+au BufNewFile,BufRead * :call AdjustIndent()
 
 " Airline
 :let g:airline_theme='base16_solarized' 
@@ -233,12 +245,12 @@ function! AdjustFontSize(amount)
 endfunction
 
 function! LargerFont()
-  call AdjustFontSize(1)
+   call AdjustFontSize(1)
 endfunction
 command! LargerFont call LargerFont()
 
 function! SmallerFont()
-  call AdjustFontSize(-1)
+   call AdjustFontSize(-1)
 endfunction
 command! SmallerFont call SmallerFont()
 
@@ -269,33 +281,33 @@ set background=dark
 let s:mycolors = ['solarized',  'molokai' , 'desert', 'material-theme']
 
 function! NextColor(how, echo_color)
-  if exists('g:colors_name')
-    let current = index(s:mycolors, g:colors_name)
-  else
-    let current = -1
-  endif
-  let missing = []
-  let how = a:how
-  for i in range(len(s:mycolors))
-     let current += how
-     " Wrapping at the end of list
-     if !(0 <= current && current < len(s:mycolors))
-        let current = (how>0 ? 0 : len(s:mycolors)-1)
-     endif
-     try
-      execute 'colorscheme '.s:mycolors[current]
-      break
-    catch /E185:/
-      call add(missing, s:mycolors[current])
-    endtry
-  endfor
-  redraw
-  if len(missing) > 0
-    echo 'Error: colorscheme not found:' join(missing)
-  endif
-  if (a:echo_color)
-    echo "Switching to colorscheme: " . g:colors_name
-  endif
+   if exists('g:colors_name')
+      let current = index(s:mycolors, g:colors_name)
+   else
+      let current = -1
+   endif
+   let missing = []
+   let how = a:how
+   for i in range(len(s:mycolors))
+      let current += how
+      " Wrapping at the end of list
+      if !(0 <= current && current < len(s:mycolors))
+         let current = (how>0 ? 0 : len(s:mycolors)-1)
+      endif
+      try
+         execute 'colorscheme '.s:mycolors[current]
+         break
+      catch /E185:/
+         call add(missing, s:mycolors[current])
+      endtry
+   endfor
+   redraw
+   if len(missing) > 0
+      echo 'Error: colorscheme not found:' join(missing)
+   endif
+   if (a:echo_color)
+      echo "Switching to colorscheme: " . g:colors_name
+   endif
 endfunction
 
 "-------------------------------------------------------------------------------
@@ -374,37 +386,37 @@ vnoremap <silent> go :call VisualSelection('go')<CR>
 vnoremap <silent> g: :call VisualSelection('g:')<CR> 
 
 function! CmdLine(str)
-    exe "menu Foo.Bar :" . a:str
-    emenu Foo.Bar
-    unmenu Foo
+   exe "menu Foo.Bar :" . a:str
+   emenu Foo.Bar
+   unmenu Foo
 endfunction
 
 function! VisualSelection(direction) range
-    let l:saved_reg = @"
-    execute "normal! vgvy"
+   let l:saved_reg = @"
+   execute "normal! vgvy"
 
-    let l:pattern = escape(@", '\\/.*$^~[]')
-    let l:pattern = substitute(l:pattern, "\n$", "", "")
+   let l:pattern = escape(@", '\\/.*$^~[]')
+   let l:pattern = substitute(l:pattern, "\n$", "", "")
 
-    if a:direction == 'b'
-        execute "normal ?" . l:pattern . "^M"
-    elseif a:direction == 'gv'
-        " $power1/2/3/4... are envvar pointing to sandbox dir where my team's code is present. 
-        call CmdLine("vimgrep " . '/'. l:pattern . '/gj' . ' % $power1/** $power2/** $power3/** $power4/** <CR>')
-        :tabnew
-        :copen 10
-    elseif a:direction == 'replace'
-        call CmdLine("%s" . '/'. l:pattern . '/')
-    elseif a:direction == 'g:'
-        call CmdLine('/\v'. l:pattern . '\s*:<CR>')
-    elseif a:direction == 'go'
-        call CmdLine('silent !firefox "https://opengrok/source/search?q=' .  l:pattern .  '&project=src" & <CR>')
-    elseif a:direction == 'f'
-        execute "normal /" . l:pattern . "^M"
-    endif
+   if a:direction == 'b'
+      execute "normal ?" . l:pattern . "^M"
+   elseif a:direction == 'gv'
+      " $power1/2/3/4... are envvar pointing to sandbox dir where my team's code is present. 
+      call CmdLine("vimgrep " . '/'. l:pattern . '/gj' . ' % $power1/** $power2/** $power3/** $power4/** <CR>')
+      :tabnew
+      :copen 10
+   elseif a:direction == 'replace'
+      call CmdLine("%s" . '/'. l:pattern . '/')
+   elseif a:direction == 'g:'
+      call CmdLine('/\v'. l:pattern . '\s*:<CR>')
+   elseif a:direction == 'go'
+      call CmdLine('silent !firefox "https://opengrok/source/search?q=' .  l:pattern .  '&project=src" & <CR>')
+   elseif a:direction == 'f'
+      execute "normal /" . l:pattern . "^M"
+   endif
 
-    let @/ = l:pattern
-    let @" = l:saved_reg
+   let @/ = l:pattern
+   let @" = l:saved_reg
 endfunction
 
 "-------------------------------------------------------------------------------
@@ -602,9 +614,6 @@ vnoremap <Space> <Esc>i<C-X><C-s>
 ":windo to do something on all open windows
 
 " use :map to list allmapping
-
-" gf - go to file under cursor
-" gx - go to website under cursor
 
 " use z + direction keys jklh to go to up or down folds
 

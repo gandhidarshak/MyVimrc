@@ -125,13 +125,14 @@ A *shout-out* to all the awesome creators!!
 
       vim-plug                   : A minimalist Vim plugin manager
       DoxygenToolkit             : Doxygen tool kit for Vim to provide comment templates
+      detectindent               : Automatically adjust shiftwidth based on current file
       vim-easymotion             : Easy navigation in vim
       tabular                    : Tabularize / Align using any string
       taglist                    : Tag List Explorer using etags
       ctrlp                      : Fuzzy file search
-      Gundo                      : visualize your Vim undo tree
+      Gundo                      : Visualize your Vim undo tree
       OmniCppComplete            : Omni Complete for C++ Auto complete
-      indentLine                 : Indent lines visulizer 
+      indentLine                 : Indent lines visulizer
       vim-cpp-enhanced-highlight : C++11/14/17 based syntax highlighting
       vim-yaml                   : Yaml syntax file
       vim-colors-solarized       : Solarized theme

@@ -49,6 +49,10 @@ set autoindent                 " Auto indent next line using current line
 set smartindent                " Smart indentation
 set cindent                    " More smart/strict indentation
 set cino+=(0                   " Better indentation for function arguments
+set expandtab                  " Convert Tab into spaces
+set tabstop=3                  " 1 tab = 3 spaces
+set softtabstop=3              " 1 tab = 3 spaces
+set shiftwidth=3               " 1 tab = 3 spaces
 set formatoptions+=rqo         " How auto-formatting will work
 set foldmethod=syntax          " Use syntax fold method by default 
 
@@ -132,7 +136,7 @@ call plug#end()
 
 " Run :PlugInstall first if not already installed. Only for initial set up.
 if empty(glob($VIMPLUGDIRECTORY))
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+   autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
 
 "-------------------------------------------------------------------------------
@@ -158,18 +162,8 @@ let g:DoxygenToolkit_blockFooter="----------------------------------------------
 
 
 " explandtab
-" When indent cannot be automatically detected 
-let g:detectindent_preferred_indent = 3
 " Limit for number of lines that will be analysed set
-let g:detectindent_max_lines_to_analyse = 1000
-" Prefer expand tab over noexpand tab 
-let g:detectindent_preferred_expandtab = 1
-function! AdjustIndent()
-   :DetectIndent
-   :IndentLinesReset
-   echo 'Setting shiftwidth to: ' &shiftwidth
-endfunction
-au BufNewFile,BufRead * :call AdjustIndent()
+let g:detectindent_max_lines_to_analyse = 10000
 
 " Airline
 :let g:airline_theme='base16_solarized' 
@@ -519,7 +513,7 @@ map <F4> :!p4 edit %<CR>:w!<CR>
 " diffupdate to update the changes after making small modification
 map <F6> :silent !p4 diff %<CR>
 map <F7> :if confirm('Revert to original?', "&Yes\n&No", 1)==1 
-      \<Bar> exec "!p4 revert " . expand("%:p") <Bar> edit <Bar> endif<CR><CR>
+         \<Bar> exec "!p4 revert " . expand("%:p") <Bar> edit <Bar> endif<CR><CR>
 " Diff - Ignore white space while diff
 set diffopt+=iwhite
 set diffexpr=""
@@ -530,6 +524,9 @@ nnoremap <C-F9> :call NextColor(-1,1)<CR>
 
 " load vimrc, Update plug-ins
 map <F11> :source $MYVIMRC <CR> :PlugUpgrade <CR> :PlugUpdate <CR>
+
+" Automatically detectindent for given file
+map <F12> :DetectIndent <CR> :IndentLinesReset <CR> :set shiftwidth? <CR>
 
 "-------------------------------------------------------------------------------
 " 14. Spell check functions  

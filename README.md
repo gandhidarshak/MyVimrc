@@ -40,7 +40,7 @@ Below bind-keys will be readily available once you install the vimrc.
       F9  : Iterate forward in themes (ctrl-F9 to iterate backwards)
       F10 : Toggle spell-check
       F11 : Source .vimrc file, update plug-ins
-      F12 : <Open for future use>
+      F12 : Set shiftwidth and tabstop automatically by analyzing current file
       
       ctrl-a : Increment number under cursor
       ctrl-b : Bind all windows for synchronous scrolling

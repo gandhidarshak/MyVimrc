@@ -85,8 +85,8 @@ au BufNewFile,BufRead *.config set syntax=yaml
 " Use indent fold-method for a few file types
 au FileType python,yml,yaml,cfg,config set foldmethod=indent
 
-" Sub-tree style :E command. NOTE: you may also use NerdTree instead.
-let g:netrw_liststyle=3
+" ls style :E command. NOTE: you may also use NerdTree instead.
+let g:netrw_liststyle=2
 
 " Treat long lines as break lines (useful when moving around in them)
 map j gj
@@ -119,18 +119,19 @@ Plug 'altercation/vim-colors-solarized' " Solarized theme
 Plug 'tomasr/molokai'                   " Molokai theme
 Plug 'jdkanani/vim-material-theme'      " Material theme
 Plug 'raimondi/delimitmate'             " Auto closing of quotes, brackets, etc.
-Plug 'tpope/vim-fugitive'               " Git wrapper for Vim
 Plug 'bling/vim-airline'                " Status tab line for vim
 Plug 'vim-airline/vim-airline-themes'   " Themes for airline
 Plug 'takac/vim-fontmanager'            " Font manager for quick font changes
+Plug 'airblade/vim-gitgutter'           " To show a git diff in the 'gutter'
 
 " TODO: Configure YouCompleteMe and move on from OmniCppComplete when possible
 " Plug 'Valloric/YouCompleteMe' 
 
-" Uncomment below if you use nerdcommenter or nerdtree
-" I like my own commenter mapping ctrl-y and vim default file explorer more
+" Uncomment below if you use fugitive, nerdcommenter or nerdtree
+" At one point I used to use them, but now I don't anymore
 " Plug 'scrooloose/nerdcommenter'        
 " Plug 'scrooloose/nerdtree'              
+" Plug 'tpope/vim-fugitive'     
 
 call plug#end()
 
@@ -160,6 +161,12 @@ let g:DoxygenToolkit_authorName=expand($USER)
 let g:DoxygenToolkit_versionString="1.0"
 let g:DoxygenToolkit_blockFooter="-------------------------------------------------------------------------------"
 
+" Git gutter
+nmap ghp <Plug>GitGutterPreviewHunk
+nmap ghs <Plug>GitGutterStageHunk
+nmap ghu <Plug>GitGutterUndoHunk
+nmap [c <Plug>GitGutterPrevHunk
+nmap ]c <Plug>GitGutterNextHunk
 
 " explandtab
 " Limit for number of lines that will be analysed set

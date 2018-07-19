@@ -83,18 +83,23 @@ Below bind-keys will be readily available once you install the vimrc.
       ctrl-space : Go to previous spell check error
       ctrl-F9    : Iterate backwards in themes
       
-      gg : Go to top of the file
-      gG : Go to bottom of the file
-      gf : Go to file mentioned under cursor
-      gx : Go to website mentioned under cursor
-      ga : Show character encoding
-      gr : replace all words selected in vmode
-      go : vimgrep all words selected in vmode
-      gH : Select line mode
-      gv : Select previous selction
-      g~ : To change fooBAr to FOObaR
-      gU : To change fooBAr to FOOBAR
-      gu : To change fooBAr to foobar
+      gg  : Go to top of the file
+      gG  : Go to bottom of the file
+      gf  : Go to file mentioned under cursor
+      gx  : Go to website mentioned under cursor
+      ga  : Show character encoding
+      gr  : replace all words selected in vmode
+      go  : open opengrok and search the word selected
+      gH  : Select line mode
+      gv  : Select previous selction in normal mode, run vimgrep in visual mode
+      g~  : To change fooBAr to FOObaR
+      gU  : To change fooBAr to FOOBAR
+      gu  : To change fooBAr to foobar
+      ghp : GitGutterPreviewHunk
+      ghs : GitGutterStageHunk
+      ghu : GitGutterUndoHunk
+      [c  : GitGutterPrevHunk
+      ]c  : GitGutterNextHunk
       
       *    : search for all words selected in vmode
       #    : Count occurrence of word under cursor
@@ -139,10 +144,10 @@ A *shout-out* to all the awesome creators!!
       molokai                    : Molokai theme
       vim-material-theme         : Material theme
       delimitmate                : Auto closing of quotes, brackets, etc.
-      vim-fugitive               : Git wrapper for Vim
       vim-airline                : Status tab line for vim
       vim-airline-themes         : Themes for airline
       vim-fontmanager            : Font manager for vim
+      airblade/vim-gitgutter     : To show a git diff in the 'gutter'
 
 ## Sharing is caring!
 

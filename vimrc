@@ -119,8 +119,6 @@ Plug 'altercation/vim-colors-solarized' " Solarized theme
 Plug 'tomasr/molokai'                   " Molokai theme
 Plug 'jdkanani/vim-material-theme'      " Material theme
 Plug 'raimondi/delimitmate'             " Auto closing of quotes, brackets, etc.
-Plug 'bling/vim-airline'                " Status tab line for vim
-Plug 'vim-airline/vim-airline-themes'   " Themes for airline
 Plug 'takac/vim-fontmanager'            " Font manager for quick font changes
 Plug 'airblade/vim-gitgutter'           " To show a git diff in the 'gutter'
 
@@ -132,6 +130,8 @@ Plug 'airblade/vim-gitgutter'           " To show a git diff in the 'gutter'
 " Plug 'scrooloose/nerdcommenter'        
 " Plug 'scrooloose/nerdtree'              
 " Plug 'tpope/vim-fugitive'     
+" Plug 'bling/vim-airline'                " Status tab line for vim
+" Plug 'vim-airline/vim-airline-themes'   " Themes for airline
 
 call plug#end()
 
@@ -156,10 +156,8 @@ cabbrev E Explore
 set tags=./tags;
 
 " DoxygenToolkit
-let g:DoxygenToolkit_blockHeader="-------------------------------------------------------------------------------"
 let g:DoxygenToolkit_authorName=expand($USER)
 let g:DoxygenToolkit_versionString="1.0"
-let g:DoxygenToolkit_blockFooter="-------------------------------------------------------------------------------"
 
 " Git gutter
 nmap ghp <Plug>GitGutterPreviewHunk
@@ -565,6 +563,17 @@ snoremap <C-@> <C-Space>
 vnoremap <Space> <Esc>i<C-X><C-s>
 
 :nohl 
+
+" This will beautify yaml by making sure : is paded with exactly 1 space on each
+" side and Lists are tabularized
+function! BeautifyYaml()
+   :1,$s#\s*:\s*#:#
+   :1,$g#:\[# Tabularize /:\zs[
+   :1,$g#:\s*\[# Tabularize /,
+   :1,$g#:\s*\[# Tabularize /]
+   :1,$s#:# : #
+endfunction
+command! BeautifyYaml call BeautifyYaml()
 
 "-------------------------------------------------------------------------------
 " 15. List of some other vim how-to and commands.

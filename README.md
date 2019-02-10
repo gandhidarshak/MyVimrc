@@ -60,6 +60,7 @@ Below bind-keys will be readily available once you install the vimrc.
       ctrl-p : CtrlP fuzzy file search
       ctrl-q : Column block select
       ctrl-r : Redo
+               In Command mode, Use <C-R>" to paste content to command.
       ctrl-s : Remove extra spaces without impacting indentation
       ctrl-t : <Insert Mode> tab ++
       ctrl-u : Scroll Up

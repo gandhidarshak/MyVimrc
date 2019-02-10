@@ -229,7 +229,7 @@ if has('win32')
 else
    let g:fontman_font = "DejaVu Sans Mono"
 endif
-let g:fontman_size = 14
+let g:fontman_size = 15
 
 let s:minfontsize = 6
 let s:maxfontsize = 24
@@ -267,7 +267,7 @@ if has("gui_running")
    set guitablabel=%M\ %t
    set t_Co=256    " colors - use them all 
    set cursorline  " highlight current line
-   silent!  colorscheme solarized
+   silent!  colorscheme molokai
 else
    colorscheme desert  " for vim/vi terminal
 endif
@@ -326,6 +326,11 @@ au FileType python,tcl,csh imap     <buffer> <C-l> #<ESC>:call  CLine()<CR>A
 au FileType python,tcl,csh inoremap <buffer> <C-l> #<ESC>:call  CLine()<CR>A
 au FileType vim            imap     <buffer> <C-l> "<ESC>:call  CLine()<CR>A
 au FileType vim            inoremap <buffer> <C-l> "<ESC>:call  CLine()<CR>A
+" I always use *.bas file for Visual Basic, not for Basic
+au FileType basic,bas      set filetype=vb 
+au FileType basic,ba       set filetype=vb 
+au FileType vb             imap     <buffer> <C-l> '<ESC>:call  CLine()<CR>A
+au FileType vb             inoremap <buffer> <C-l> '<ESC>:call  CLine()<CR>A
 
 " Beautify the comments using Ctrl-y
 au FileType c,cpp,cxx,h nnoremap <buffer> <c-y> /\v\/\/\-<CR><UP>vN<DOWN>    

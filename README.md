@@ -84,6 +84,12 @@ Below bind-keys will be readily available once you install the vimrc.
       ctrl-space : Go to previous spell check error
       ctrl-F9    : Iterate backwards in themes
       
+      ]c  : Next difference
+      [c  : Previous difference
+      do  : Diff obtain
+      dp  : Diff put
+      zo  : Open folded text
+      zc  : Close folded text
       gg  : Go to top of the file
       gG  : Go to bottom of the file
       gf  : Go to file mentioned under cursor
@@ -106,10 +112,13 @@ Below bind-keys will be readily available once you install the vimrc.
       #    : Count occurrence of word under cursor
       ;    : leader key (aka prefix key) - change if prefered
       ;n   : Next error in quick fix list during vimgrep/make
-      ;p   : Previous error in quick fix list during vimgrep/make
+      ;b   : Previous (back) error in quick fix list during vimgrep/make
       ;q   : Close entire tab
       ;e   : Toggle Tag list explorer
-      ;o   : Open current file in opengrok at current line
+      ;g   : Open current file in opengrok at current line
+      ;o   : Diff-obtain but for diffchar
+      ;p   : Diff-put but for diffchar
+      ;d   " diff this and wrap on all open windows
       ;c   : <Visual Mode> Copy selected content to buffer *
       ;c   : <Normal Mode> Copy to full path to file in buffer *
       ;;s  : Find(Search) {char} forward and backward. Awesome!
@@ -145,10 +154,10 @@ A *shout-out* to all the awesome creators!!
       molokai                    : Molokai theme
       vim-material-theme         : Material theme
       delimitmate                : Auto closing of quotes, brackets, etc.
-      vim-airline                : Status tab line for vim
-      vim-airline-themes         : Themes for airline
       vim-fontmanager            : Font manager for vim
-      airblade/vim-gitgutter     : To show a git diff in the 'gutter'
+      vim-gitgutter              : To show a git diff in the 'gutter'
+      dracula                    : Dracula theme for vim
+      diffchar                   : Highlight the exact differences, based on characters and words
 
 ## Sharing is caring!
 

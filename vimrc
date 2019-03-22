@@ -83,7 +83,7 @@ au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g
 au BufNewFile,BufRead *.config set syntax=yaml
 
 " Use indent fold-method for a few file types
-au FileType python,yml,yaml,cfg,config set foldmethod=indent
+au FileType python,yml,yaml,cfg,config,xml set foldmethod=indent
 
 " ls style :E command. NOTE: you may also use NerdTree instead.
 let g:netrw_liststyle=2
@@ -121,15 +121,16 @@ Plug 'jdkanani/vim-material-theme'      " Material theme
 Plug 'raimondi/delimitmate'             " Auto closing of quotes, brackets, etc.
 Plug 'takac/vim-fontmanager'            " Font manager for quick font changes
 Plug 'airblade/vim-gitgutter'           " To show a git diff in the 'gutter'
+Plug 'dracula/vim'                      " Dracula theme for vim
+Plug 'rickhowe/diffchar.vim'            " Highlight the exact differences, based on characters and words
 
 " TODO: Configure YouCompleteMe and move on from OmniCppComplete when possible
 " Plug 'Valloric/YouCompleteMe' 
 
-" Uncomment below if you use fugitive, nerdcommenter or nerdtree
-" At one point I used to use them, but now I don't anymore
+" Uncomment below if you use. At one point I used to use them, but now I don't anymore
 " Plug 'scrooloose/nerdcommenter'        
 " Plug 'scrooloose/nerdtree'              
-" Plug 'tpope/vim-fugitive'     
+" Plug 'tpope/vim-fugitive'               " Too much for my limited git usage as of now.
 " Plug 'bling/vim-airline'                " Status tab line for vim
 " Plug 'vim-airline/vim-airline-themes'   " Themes for airline
 
@@ -173,6 +174,9 @@ let g:detectindent_max_lines_to_analyse = 10000
 " Airline
 :let g:airline_theme='base16_solarized' 
 silent! call airline#extensions#whitespace#disable()
+
+" diffchar
+let g:DiffColors = 100
 
 " OmniCppComplete
 let OmniCpp_NamespaceSearch     = 0
@@ -267,7 +271,7 @@ if has("gui_running")
    set guitablabel=%M\ %t
    set t_Co=256    " colors - use them all 
    set cursorline  " highlight current line
-   silent!  colorscheme molokai
+   silent!  colorscheme solarized
 else
    colorscheme desert  " for vim/vi terminal
 endif
@@ -277,7 +281,7 @@ endif
 "-------------------------------------------------------------------------------
 set background=dark
 " colorscheme names that I like to toggle between
-let s:mycolors = ['solarized',  'molokai' , 'desert', 'material-theme']
+let s:mycolors = ['solarized', 'dracula', 'molokai' , 'desert', 'material-theme']
 
 function! NextColor(how, echo_color)
    if exists('g:colors_name')
@@ -430,9 +434,14 @@ endfunction
 " Set your leader key per your convenience.
 let mapleader=";"
 
+" Default from diffchar plugin is leader-g for get, but I want similar to diff obtain
+map  <leader>o <Plug>GetDiffCharPair
+map  <leader>d :windo diffthis<CR>   :windo set wrap<CR>
+
 " Next and previous errors in quick fix list during vimgrep/make
 map <silent> <leader>n :cn<CR>
-map <silent> <leader>p :cp<CR>
+map <silent> <leader>b :cp<CR> 
+" using p for diffchar put
 
 " Close entire tab 
 map <silent> <leader>q :tabclose<CR>
@@ -441,7 +450,7 @@ map <silent> <leader>q :tabclose<CR>
 map <silent> <leader>e :TlistToggle<CR>
 
 " open current file in opengrok at current line
-map <silent> <leader>o :call OpenGrokAtCurrentLine()<CR>
+map <silent> <leader>g :call OpenGrokAtCurrentLine()<CR>
 
 " Operations on "* buffer works with mouse middle click
 " Copy current file path to clipboard if in normal mode,
@@ -649,3 +658,21 @@ command! BeautifyYaml call BeautifyYaml()
 " Multi-line search: Use \_.* instead of .* to indicate to include any character
 " including new line one: e.g /This\_.*Text/
 
+" Mapping in vim - Some info
+" map is the "root" of all recursive mapping commands. The root form applies to
+" "normal", "visual+select", and "operator-pending" modes.
+" noremap is the "root" of all non-recursive mapping commands. The root form
+" applies to the same modes as map.
+" Mode Letters
+" n: normal only
+" v: visual and select
+" o: operator-pending
+" x: visual only
+" s: select only
+" i: insert
+" c: command-line
+" l: insert, command-line, regexp-search
+
+
+" How to know which plugins are sourced?
+" :scriptnames

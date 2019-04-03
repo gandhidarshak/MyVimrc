@@ -361,6 +361,12 @@ function! OpenP4VAnnotate()
    call CmdLine('silent ' . l:cmd . ' & <CR>')
 endfunction
 
+
+" Show annoutate for current line in current file
+function! P4AnnotateTheLine()
+   execute '!p4 annotate -cq "%" | sed "' . line(".") . 'q;d" | cut -f1 -d: | xargs p4 describe -s | sed -e ''/Affected Files/,$d'' | sed -e ''/Wall Data/,$d'''
+endfunction
+
 "-------------------------------------------------------------------------------
 " 9. Open Current file in OpenGrok at current line
 "-------------------------------------------------------------------------------
@@ -433,6 +439,13 @@ endfunction
 
 " Set your leader key per your convenience.
 let mapleader=";"
+
+" P4 Annotate the Current line
+map <leader>a :call P4AnnotateTheLine()<CR>
+
+" Beautify Yaml 
+map <leader>y :call BeautifyYaml()<CR>
+
 
 " Default from diffchar plugin is leader-g for get, but I want similar to diff obtain
 map  <leader>o <Plug>GetDiffCharPair
@@ -581,13 +594,14 @@ vnoremap <Space> <Esc>i<C-X><C-s>
 " This will beautify yaml by making sure : is paded with exactly 1 space on each
 " side and Lists are tabularized
 function! BeautifyYaml()
-   :1,$s#\s*:\s*#:#
-   :1,$g#:\[# Tabularize /:\zs[
-   :1,$g#:\s*\[# Tabularize /,
-   :1,$g#:\s*\[# Tabularize /]
-   :1,$s#:# : #
+   if( &ft=="yaml" || &ft=="yml" || &ft=="config") 
+      :1,$s#\s*:\s*#:#
+      :1,$g#:\[# Tabularize /:\zs[
+      :1,$g#:\s*\[# Tabularize /,
+      :1,$g#:\s*\[# Tabularize /]
+      :1,$s#:# : #
+   endif
 endfunction
-command! BeautifyYaml call BeautifyYaml()
 
 "-------------------------------------------------------------------------------
 " 15. List of some other vim how-to and commands.

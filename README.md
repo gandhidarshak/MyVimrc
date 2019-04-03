@@ -121,6 +121,8 @@ Below bind-keys will be readily available once you install the vimrc.
       ;d   " diff this and wrap on all open windows
       ;c   : <Visual Mode> Copy selected content to buffer *
       ;c   : <Normal Mode> Copy to full path to file in buffer *
+      ;y   : Beautify Yaml file
+      ;a   : P4 Annotate On the current line 
       ;;s  : Find(Search) {char} forward and backward. Awesome!
       ;;f  : Find {char} to the right.
       ;;F  : Find {char} to the left. 

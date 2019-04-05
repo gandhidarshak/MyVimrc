@@ -123,6 +123,7 @@ Plug 'takac/vim-fontmanager'            " Font manager for quick font changes
 Plug 'airblade/vim-gitgutter'           " To show a git diff in the 'gutter'
 Plug 'dracula/vim'                      " Dracula theme for vim
 Plug 'rickhowe/diffchar.vim'            " Highlight the exact differences, based on characters and words
+Plug 'terryma/vim-expand-region'        " visually select increasingly larger regions of text using the same key combination
 
 " TODO: Configure YouCompleteMe and move on from OmniCppComplete when possible
 " Plug 'Valloric/YouCompleteMe' 
@@ -364,7 +365,7 @@ endfunction
 
 " Show annoutate for current line in current file
 function! P4AnnotateTheLine()
-   execute '!p4 annotate -cq "%" | sed "' . line(".") . 'q;d" | cut -f1 -d: | xargs p4 describe -s | sed -e ''/Affected Files/,$d'' | sed -e ''/Wall Data/,$d'''
+   execute '!p4 annotate -cq "%" | sed "' . line(".") . 'q;d" | cut -f1 -d: | xargs p4 describe -s | sed -e ''/Affected files/,$d'' | sed -e ''/Wall Data/,$d'''
 endfunction
 
 "-------------------------------------------------------------------------------
@@ -436,6 +437,10 @@ endfunction
 "-------------------------------------------------------------------------------
 " 11. Leader key driven key-maps  
 "-------------------------------------------------------------------------------
+
+" 
+map <leader>j <Plug>(expand_region_expand)
+map <leader>k <Plug>(expand_region_shrink)
 
 " Set your leader key per your convenience.
 let mapleader=";"

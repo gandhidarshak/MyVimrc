@@ -119,6 +119,8 @@ Below bind-keys will be readily available once you install the vimrc.
       ;o   : Diff-obtain but for diffchar
       ;p   : Diff-put but for diffchar
       ;d   " diff this and wrap on all open windows
+      ;j   " Expand regions - smart expand
+      ;k   " Expand regiones - smart shrink
       ;c   : <Visual Mode> Copy selected content to buffer *
       ;c   : <Normal Mode> Copy to full path to file in buffer *
       ;y   : Beautify Yaml file
@@ -160,6 +162,7 @@ A *shout-out* to all the awesome creators!!
       vim-gitgutter              : To show a git diff in the 'gutter'
       dracula                    : Dracula theme for vim
       diffchar                   : Highlight the exact differences, based on characters and words
+      vim-expand-region          : Visually select increasingly larger regions of text using the same key combination
 
 ## Sharing is caring!
 

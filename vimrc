@@ -417,7 +417,8 @@ function! VisualSelection(direction) range
       execute "normal ?" . l:pattern . "^M"
    elseif a:direction == 'gv'
       " $power1/2/3/4... are envvar pointing to sandbox dir where my team's code is present. 
-      call CmdLine("vimgrep " . '/'. l:pattern . '/gj' . ' % $power1/** $power2/** $power3/** $power4/** <CR>')
+      let l:searchList = '% $power1/**/*.h $power1/**/*.cxx $power2/**/*.h $power2/**/*.cxx $power4/power_compiler/**/*.py'
+      call CmdLine("vimgrep " . '/'. l:pattern . '/gj' . l:searchList . ' <CR>')' % ' . 
       :tabnew
       :copen 10
    elseif a:direction == 'replace'

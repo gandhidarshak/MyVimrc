@@ -111,6 +111,7 @@ Below bind-keys will be readily available once you install the vimrc.
       *    : search for all words selected in vmode
       #    : Count occurrence of word under cursor
       ;    : leader key (aka prefix key) - change if prefered
+      ;m   : Make from dispatch plugin (:make async)
       ;n   : Next error in quick fix list during vimgrep/make
       ;b   : Previous (back) error in quick fix list during vimgrep/make
       ;q   : Close entire tab
@@ -163,6 +164,7 @@ A *shout-out* to all the awesome creators!!
       dracula                    : Dracula theme for vim
       diffchar                   : Highlight the exact differences, based on characters and words
       vim-expand-region          : Visually select increasingly larger regions of text using the same key combination
+      vim-dispatch               : Run :make and other tasks (grep etc) async from vim
 
 ## Sharing is caring!
 

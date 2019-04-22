@@ -55,7 +55,7 @@ set softtabstop=3              " 1 tab = 3 spaces
 set shiftwidth=3               " 1 tab = 3 spaces
 set formatoptions+=rqo         " How auto-formatting will work
 set foldmethod=syntax          " Use syntax fold method by default 
-
+set makeprg=rdi\ make\ -j\ 16  " Use c++ make setup of your organization
 " use very magic searches
 nnoremap / /\v
 vnoremap / /\v
@@ -124,6 +124,7 @@ Plug 'airblade/vim-gitgutter'           " To show a git diff in the 'gutter'
 Plug 'dracula/vim'                      " Dracula theme for vim
 Plug 'rickhowe/diffchar.vim'            " Highlight the exact differences, based on characters and words
 Plug 'terryma/vim-expand-region'        " visually select increasingly larger regions of text using the same key combination
+Plug 'tpope/vim-dispatch'               " Run :make and other tasks (grep etc) async from vim
 
 " TODO: Configure YouCompleteMe and move on from OmniCppComplete when possible
 " Plug 'Valloric/YouCompleteMe' 
@@ -417,8 +418,8 @@ function! VisualSelection(direction) range
       execute "normal ?" . l:pattern . "^M"
    elseif a:direction == 'gv'
       " $power1/2/3/4... are envvar pointing to sandbox dir where my team's code is present. 
-      let l:searchList = '% $power1/**/*.h $power1/**/*.cxx $power2/**/*.h $power2/**/*.cxx $power4/power_compiler/**/*.py'
-      call CmdLine("vimgrep " . '/'. l:pattern . '/gj' . l:searchList . ' <CR>')' % ' . 
+      let l:searchList = '$power1/**/*.h $power1/**/*.cxx $power2/**/*.h $power2/**/*.cxx $power4/power_compiler/**/*.py'
+      call CmdLine("vimgrep " . '/'. l:pattern . '/gj' . l:searchList . ' <CR>')
       :tabnew
       :copen 10
    elseif a:direction == 'replace'
@@ -458,9 +459,9 @@ map  <leader>o <Plug>GetDiffCharPair
 map  <leader>d :windo diffthis<CR>   :windo set wrap<CR>
 
 " Next and previous errors in quick fix list during vimgrep/make
+map <silent> <leader>m :Make<CR>
 map <silent> <leader>n :cn<CR>
 map <silent> <leader>b :cp<CR> 
-" using p for diffchar put
 
 " Close entire tab 
 map <silent> <leader>q :tabclose<CR>
@@ -561,7 +562,7 @@ nnoremap <F9> :call NextColor(1,1)<CR>
 nnoremap <C-F9> :call NextColor(-1,1)<CR>
 
 " load vimrc, Update plug-ins
-map <F11> :source $MYVIMRC <CR> :PlugUpgrade <CR> :PlugUpdate <CR>
+map <F11> :source $MYVIMRC <CR> :PlugUpgrade <CR> :PlugUpdate <CR> :PlugClean <CR>
 
 " Automatically detectindent for given file
 map <F12> :DetectIndent <CR> :IndentLinesReset <CR> :set shiftwidth? <CR>

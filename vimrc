@@ -113,7 +113,7 @@ Plug 'ctrlpvim/ctrlp.vim'               " Fuzzy file search
 Plug 'vim-scripts/Gundo'                " visualize your Vim undo tree
 Plug 'vim-scripts/OmniCppComplete'      " Omni Complete for C++ Auto complete
 Plug 'Yggdroot/indentLine'              " Indent lines
-Plug 'octol/vim-cpp-enhanced-highlight' " C++ 11/14/17 based syntax highlighting
+Plug 'sheerun/vim-polyglot'             " A collection of language packs for all main languages
 Plug 'stephpy/vim-yaml'                 " Yaml syntax
 Plug 'altercation/vim-colors-solarized' " Solarized theme
 Plug 'tomasr/molokai'                   " Molokai theme
@@ -423,7 +423,7 @@ function! VisualSelection(direction) range
       :tabnew
       :copen 10
    elseif a:direction == 'replace'
-      call CmdLine("%s" . '/'. l:pattern . '/')
+      call CmdLine("%s" . '/'. l:pattern . '/' . l:pattern)
    elseif a:direction == 'g:'
       call CmdLine('/\v'. l:pattern . '\s*:<CR>')
    elseif a:direction == 'go'

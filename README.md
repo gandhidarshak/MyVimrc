@@ -153,7 +153,7 @@ A *shout-out* to all the awesome creators!!
       Gundo                      : Visualize your Vim undo tree
       OmniCppComplete            : Omni Complete for C++ Auto complete
       indentLine                 : Indent lines visulizer
-      vim-cpp-enhanced-highlight : C++11/14/17 based syntax highlighting
+      vim-polyglot               : A collection of language packs for all main languages
       vim-yaml                   : Yaml syntax file
       vim-colors-solarized       : Solarized theme
       molokai                    : Molokai theme

@@ -54,7 +54,6 @@ Below bind-keys will be readily available once you install the vimrc.
       ctrl-j : Justify selected lines
       ctrl-k : Break function arguments in new lines 
       ctrl-l : File type dependent comment template 
-      ctrl-m : Maximize and balance split files. Simple and elegant.
       ctrl-n : Copy 'b filename:linenumber' for debugging in gbd and pdb
       ctrl-o : Jump to previously visited location
       ctrl-p : CtrlP fuzzy file search
@@ -124,6 +123,7 @@ Below bind-keys will be readily available once you install the vimrc.
       ;k   " Expand regiones - smart shrink
       ;c   : <Visual Mode> Copy selected content to buffer *
       ;c   : <Normal Mode> Copy to full path to file in buffer *
+      ;w   : Maximize and balance split files. Simple and elegant.
       ;y   : Beautify Yaml file
       ;a   : P4 Annotate On the current line 
       ;;s  : Find(Search) {char} forward and backward. Awesome!
@@ -143,28 +143,28 @@ opening vim/gvim for the first time after git clone.
 
 A *shout-out* to all the awesome creators!!
 
-      vim-plug                   : A minimalist Vim plugin manager
-      DoxygenToolkit             : Doxygen tool kit for Vim to provide comment templates
-      detectindent               : Automatically adjust shiftwidth based on current file
-      vim-easymotion             : Easy navigation in vim
-      tabular                    : Tabularize / Align using any string
-      taglist                    : Tag List Explorer using etags
-      ctrlp                      : Fuzzy file search
-      Gundo                      : Visualize your Vim undo tree
-      OmniCppComplete            : Omni Complete for C++ Auto complete
-      indentLine                 : Indent lines visulizer
-      vim-polyglot               : A collection of language packs for all main languages
-      vim-yaml                   : Yaml syntax file
-      vim-colors-solarized       : Solarized theme
-      molokai                    : Molokai theme
-      vim-material-theme         : Material theme
-      delimitmate                : Auto closing of quotes, brackets, etc.
-      vim-fontmanager            : Font manager for vim
-      vim-gitgutter              : To show a git diff in the 'gutter'
-      dracula                    : Dracula theme for vim
-      diffchar                   : Highlight the exact differences, based on characters and words
-      vim-expand-region          : Visually select increasingly larger regions of text using the same key combination
-      vim-dispatch               : Run :make and other tasks (grep etc) async from vim
+      vim-plug             : A minimalist Vim plugin manager
+      DoxygenToolkit       : Doxygen tool kit for Vim to provide comment templates
+      detectindent         : Automatically adjust shiftwidth based on current file
+      vim-easymotion       : Easy navigation in vim
+      tabular              : Tabularize / Align using any string
+      taglist              : Tag List Explorer using etags
+      ctrlp                : Fuzzy file search
+      Gundo                : Visualize your Vim undo tree
+      OmniCppComplete      : Omni Complete for C++ Auto complete
+      indentLine           : Indent lines visulizer
+      vim-polyglot         : A collection of language packs for all main languages
+      vim-yaml             : Yaml syntax file
+      vim-colors-solarized : Solarized theme
+      molokai              : Molokai theme
+      vim-material-theme   : Material theme
+      delimitmate          : Auto closing of quotes, brackets, etc.
+      vim-fontmanager      : Font manager for vim
+      vim-gitgutter        : To show a git diff in the 'gutter'
+      dracula              : Dracula theme for vim
+      diffchar             : Highlight the exact differences, based on characters and words
+      vim-expand-region    : Visually select increasingly larger regions of text using the same key combination
+      vim-dispatch         : Run                                                                                : make and other tasks (grep etc) async from vim
 
 ## Sharing is caring!
 

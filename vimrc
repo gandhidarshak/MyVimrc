@@ -113,7 +113,7 @@ Plug 'ctrlpvim/ctrlp.vim'               " Fuzzy file search
 Plug 'vim-scripts/Gundo'                " visualize your Vim undo tree
 Plug 'vim-scripts/OmniCppComplete'      " Omni Complete for C++ Auto complete
 Plug 'Yggdroot/indentLine'              " Indent lines
-Plug 'sheerun/vim-polyglot'             " A collection of language packs for all main languages
+" Plug 'sheerun/vim-polyglot'             " A collection of language packs for all main languages
 Plug 'stephpy/vim-yaml'                 " Yaml syntax
 Plug 'altercation/vim-colors-solarized' " Solarized theme
 Plug 'tomasr/molokai'                   " Molokai theme
@@ -126,12 +126,10 @@ Plug 'rickhowe/diffchar.vim'            " Highlight the exact differences, based
 Plug 'terryma/vim-expand-region'        " visually select increasingly larger regions of text using the same key combination
 Plug 'tpope/vim-dispatch'               " Run :make and other tasks (grep etc) async from vim
 
-" TODO: Configure YouCompleteMe and move on from OmniCppComplete when possible
-" Plug 'Valloric/YouCompleteMe' 
 
-" Uncomment below if you use. At one point I used to use them, but now I don't anymore
-" Plug 'scrooloose/nerdcommenter'        
-" Plug 'scrooloose/nerdtree'              
+" Plug 'Valloric/YouCompleteMe'           " TODO: Configure YouCompleteMe and move on from OmniCppComplete when possible
+" Plug 'scrooloose/nerdcommenter'         " At one point I used to use them, but now I don't anymore
+" Plug 'scrooloose/nerdtree'              " At one point I used to use them, but now I don't anymore
 " Plug 'tpope/vim-fugitive'               " Too much for my limited git usage as of now.
 " Plug 'bling/vim-airline'                " Status tab line for vim
 " Plug 'vim-airline/vim-airline-themes'   " Themes for airline
@@ -440,12 +438,19 @@ endfunction
 " 11. Leader key driven key-maps  
 "-------------------------------------------------------------------------------
 
-" 
-map <leader>j <Plug>(expand_region_expand)
-map <leader>k <Plug>(expand_region_shrink)
 
 " Set your leader key per your convenience.
 let mapleader=";"
+
+" leader-m to maximize and balance split files. Simple and elegant.
+let fullSizeFlag=0
+map <silent> <expr> 
+   \<leader>w (fullSizeFlag==0)?':res<CR>:vertical res<CR> 
+   \:let fullSizeFlag=1<CR>' : ':wincmd =<CR> :let fullSizeFlag=0<CR>'
+
+" 
+map <leader>j <Plug>(expand_region_expand)
+map <leader>k <Plug>(expand_region_shrink)
 
 " P4 Annotate the Current line
 map <leader>a :call P4AnnotateTheLine()<CR>
@@ -502,10 +507,6 @@ map <silent> <C-n> :let @*="b ".expand("%").":".line(".")<CR>
 map <silent> <C-b> :windo set scb!<CR>
 
 
-" ctrl-m to maximize and balance split files. Simple and elegant.
-let fullSizeFlag = 0
-map <silent> <expr> <C-m> (fullSizeFlag==0)?':res<CR>:vertical res<CR> 
-         \:let fullSizeFlag=1<CR>' : ':wincmd =<CR> :let fullSizeFlag=0<CR>'
 
 " ctrl-h to switch between header and cxx file in same directory
 nmap <C-h> :e %:p:s,.h$,.X123X,:s,.cxx$,.h,:s,.X123X$,.cxx,<CR>
@@ -697,3 +698,8 @@ endfunction
 
 " How to know which plugins are sourced?
 " :scriptnames
+
+" to redirect/save the output of :map:
+" ":redir >> ~/mymaps.txt
+: ":map
+: ":redir END

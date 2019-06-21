@@ -113,7 +113,7 @@ Plug 'ctrlpvim/ctrlp.vim'               " Fuzzy file search
 Plug 'vim-scripts/Gundo'                " visualize your Vim undo tree
 Plug 'vim-scripts/OmniCppComplete'      " Omni Complete for C++ Auto complete
 Plug 'Yggdroot/indentLine'              " Indent lines
-" Plug 'sheerun/vim-polyglot'             " A collection of language packs for all main languages
+Plug 'sheerun/vim-polyglot'             " A collection of language packs for all main languages
 Plug 'stephpy/vim-yaml'                 " Yaml syntax
 Plug 'altercation/vim-colors-solarized' " Solarized theme
 Plug 'tomasr/molokai'                   " Molokai theme
@@ -442,7 +442,7 @@ endfunction
 " Set your leader key per your convenience.
 let mapleader=";"
 
-" leader-m to maximize and balance split files. Simple and elegant.
+" leader-w to maximize and balance split files. Simple and elegant.
 let fullSizeFlag=0
 map <silent> <expr> 
    \<leader>w (fullSizeFlag==0)?':res<CR>:vertical res<CR> 

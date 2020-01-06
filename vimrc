@@ -55,7 +55,8 @@ set softtabstop=3              " 1 tab = 3 spaces
 set shiftwidth=3               " 1 tab = 3 spaces
 set formatoptions+=rqo         " How auto-formatting will work
 set foldmethod=syntax          " Use syntax fold method by default 
-set makeprg=rdi\ make\ -j\ 16  " Use c++ make setup of your organization
+set makeprg=rdi\ make\ product=xpp " Use c++ make setup of your organization
+" set makeprg=rdi\ make\ -j\ 16  " Use c++ make setup of your organization
 " use very magic searches
 nnoremap / /\v
 vnoremap / /\v
@@ -703,3 +704,6 @@ endfunction
 " ":redir >> ~/mymaps.txt
 : ":map
 : ":redir END
+
+" list system fonts on terminal:
+" xlsfonts | grep adobe 

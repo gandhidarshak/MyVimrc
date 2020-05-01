@@ -27,14 +27,14 @@
 "-------------------------------------------------------------------------------
 
 set nocompatible               " Turn off vim compatibility with Vi.
-set history=100                " How many lines of command history VIM has to remember?
+set history=50                " How many lines of command history VIM has to remember?
 set showmatch                  " Show matching brackets when text indicator is over them.
 set matchtime=2                " How many tenths of a second to blink when matching brackets?
 set textwidth=80               " Zero value will disable text-width's impact
 set scrolloff=8                " Show 8 lines before and after
 set cmdheight=2                " Command line window hight
 set virtualedit=block          " Put cursor anywhere in file not limited by the text limit
-set undolevels=200             " Very high number may slow down vim
+set undolevels=50             " Very high number may slow down vim
 set nobackup                   " To switch off automatic creation of backup files
 set noswapfile                 " Don't use a swap file for the buffer.
 set hlsearch                   " Highlight all matches
@@ -170,11 +170,11 @@ let g:DoxygenToolkit_authorName=expand($USER)
 let g:DoxygenToolkit_versionString="1.0"
 
 " Git gutter
-nmap ghp <Plug>GitGutterPreviewHunk
-nmap ghs <Plug>GitGutterStageHunk
-nmap ghu <Plug>GitGutterUndoHunk
-nmap [c <Plug>GitGutterPrevHunk
-nmap ]c <Plug>GitGutterNextHunk
+nmap ghp <Plug>(GitGutterPreviewHunk)
+nmap ghs <Plug>(GitGutterStageHunk)
+nmap ghu <Plug>(GitGutterUndoHunk)
+nmap [c <Plug>(GitGutterPrevHunk)
+nmap ]c <Plug>(GitGutterNextHunk)
 
 " explandtab
 " Limit for number of lines that will be analysed set
@@ -474,7 +474,7 @@ map <leader>y :call BeautifyYaml()<CR>
 
 
 " Default from diffchar plugin is leader-g for get, but I want similar to diff obtain
-map  <leader>o <Plug>GetDiffCharPair
+map  <leader>o <Plug>(GetDiffCharPair)
 map  <leader>d :windo diffthis<CR>   :windo set wrap<CR>
 
 " Next and previous errors in quick fix list during vimgrep/make
@@ -585,9 +585,10 @@ map <F12> :DetectIndent <CR> :IndentLinesReset <CR> :set shiftwidth? <CR>
 "-------------------------------------------------------------------------------
 " 14. Spell check functions  
 "-------------------------------------------------------------------------------
-if exists('/usr/share/dict/words')
+if filereadable("/usr/share/dict/words")
    :set dictionary=/usr/share/dict/words
 endif 
+
 
 " vim dict completion
 " ctrl-n, ctrl-p - next/previous word completion 

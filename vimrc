@@ -55,8 +55,6 @@ set softtabstop=3              " 1 tab = 3 spaces
 set shiftwidth=3               " 1 tab = 3 spaces
 set formatoptions+=rqo         " How auto-formatting will work
 set foldmethod=syntax          " Use syntax fold method by default 
-set makeprg=rdi\ make\ product=xpp " Use c++ make setup of your organization
-" set makeprg=rdi\ make\ -j\ 16  " Use c++ make setup of your organization
 " use very magic searches
 nnoremap / /\v
 vnoremap / /\v
@@ -85,6 +83,16 @@ au BufNewFile,BufRead *.config set syntax=yaml
 
 " Use indent fold-method for a few file types
 au FileType python,yml,yaml,cfg,config,xml set foldmethod=indent
+
+" Use c++ make setup of your organization
+set makeprg=make
+au BufEnter */Cpp*/** set makeprg=make
+au BufEnter */vorpal/powertools/** set makeprg=rdi\ make\ product=vorpal\ -j\ 16
+au BufEnter */shared/xpp/** set makeprg=rdi\ make\ product=xpp\ -j\ 16
+au BufEnter */shared/power/** set makeprg=rdi\ make\ product=vivado\ -j\ 16
+au BufEnter */shared/designutils/power/** set makeprg=rdi\ make\ product=vivado\ -j\ 16
+au BufEnter *.dot set makeprg=dot\ -Tpng\ -o\ %.png\ %
+
 
 " ls style :E command. NOTE: you may also use NerdTree instead.
 let g:netrw_liststyle=2
@@ -417,7 +425,7 @@ function! VisualSelection(direction) range
       execute "normal ?" . l:pattern . "^M"
    elseif a:direction == 'gv'
       " $power1/2/3/4... are envvar pointing to sandbox dir where my team's code is present. 
-      let l:searchList = '$power1/**/*.h $power1/**/*.cxx $power2/**/*.h $power2/**/*.cxx $power4/power_compiler/**/*.py'
+      let l:searchList = '$power1/**/*.h $power1/**/*.cxx $power2/**/*.h $power2/**/*.cxx $power4/power_compiler/**/*.py $power5/**/*.h $power5/**/*.cxx'
       call CmdLine("vimgrep " . '/'. l:pattern . '/gj' . l:searchList . ' <CR>')
       :tabnew
       :copen 10
@@ -452,6 +460,11 @@ map <silent> <expr>
 " 
 map <leader>j <Plug>(expand_region_expand)
 map <leader>k <Plug>(expand_region_shrink)
+
+" Open new split panes to right and bottom, 
+" which feels more natural than Vim's default:
+set splitbelow
+set splitright
 
 " P4 Annotate the Current line
 map <leader>a :call P4AnnotateTheLine()<CR>
@@ -615,6 +628,10 @@ endfunction
 "-------------------------------------------------------------------------------
 " 15. List of some other vim how-to and commands.
 "-------------------------------------------------------------------------------
+
+" How to sort row alphabatically?
+" Visually select the rows and do :sort
+
 
 " convert the document to how it was some 15 minutes back
 " :earlier 15m

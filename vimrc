@@ -82,13 +82,14 @@ au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g
 au BufNewFile,BufRead *.config set syntax=yaml
 
 " Use indent fold-method for a few file types
-au FileType python,yml,yaml,cfg,config,xml set foldmethod=indent
+au FileType json,python,yml,yaml,cfg,config,xml set foldmethod=indent
 
 " Use c++ make setup of your organization
 set makeprg=make
 au BufEnter */Cpp*/** set makeprg=make
 au BufEnter */vorpal/powertools/** set makeprg=rdi\ make\ product=vorpal\ -j\ 16
-au BufEnter */shared/xpp/** set makeprg=rdi\ make\ product=xpp\ -j\ 16
+au BufEnter */shared/pdm/** set makeprg=rdi\ make\ product=pdm\ -j\ 16
+au BufEnter */shared/common/common/genericgui/** set makeprg=rdi\ make\ product=pdm\ -j\ 16
 au BufEnter */shared/power/** set makeprg=rdi\ make\ product=vivado\ -j\ 16
 au BufEnter */shared/designutils/power/** set makeprg=rdi\ make\ product=vivado\ -j\ 16
 au BufEnter *.dot set makeprg=dot\ -Tpng\ -o\ %.png\ %
@@ -122,7 +123,6 @@ Plug 'ctrlpvim/ctrlp.vim'               " Fuzzy file search
 Plug 'vim-scripts/Gundo'                " visualize your Vim undo tree
 Plug 'vim-scripts/OmniCppComplete'      " Omni Complete for C++ Auto complete
 Plug 'Yggdroot/indentLine'              " Indent lines
-Plug 'sheerun/vim-polyglot'             " A collection of language packs for all main languages
 Plug 'stephpy/vim-yaml'                 " Yaml syntax
 Plug 'altercation/vim-colors-solarized' " Solarized theme
 Plug 'tomasr/molokai'                   " Molokai theme
@@ -136,6 +136,7 @@ Plug 'terryma/vim-expand-region'        " visually select increasingly larger re
 Plug 'tpope/vim-dispatch'               " Run :make and other tasks (grep etc) async from vim
 
 
+" Plug 'sheerun/vim-polyglot'             " A collection of language packs for all main languages. This seem to give errors for json for vim 7.4 or below so commenting it for now.
 " Plug 'Valloric/YouCompleteMe'           " TODO: Configure YouCompleteMe and move on from OmniCppComplete when possible
 " Plug 'scrooloose/nerdcommenter'         " At one point I used to use them, but now I don't anymore
 " Plug 'scrooloose/nerdtree'              " At one point I used to use them, but now I don't anymore

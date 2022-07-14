@@ -1,3 +1,4 @@
 vim_plug_downloads/
 .netrwhist
 autoload/plug.vim.old
+view/

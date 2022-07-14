@@ -579,39 +579,6 @@ vmap  <leader>c "*y<CR>
 " ctrl-w : window movements 
 " ctrl-r : redo
 
-" vimwiki maps tab and s-tab to do things in table. 
-" That is incorrect as it changes behavior in md file for every tab press
-" during insert mode. I will disable it through a global variable here 
-" and map it for table rows separately.
-" 
-" 
-"
-" From /Users/darshakg/.vim/vim_plug_downloads/vimwiki/ftplugin/vimwiki.vim
-"
-" if str2nr(vimwiki#vars#get_global('key_mappings').table_mappings)
-"   inoremap <expr><buffer> <Tab> vimwiki#tbl#kbd_tab()
-"   inoremap <expr><buffer> <S-Tab> vimwiki#tbl#kbd_shift_tab()
-" endif
-"  if maparg('<CR>', 'i') !~# '.*VimwikiReturn*.'
-"    if has('patch-7.3.489')
-"      " expand iabbrev on enter
-"      inoremap <silent><buffer> <CR> <C-]><Esc>:VimwikiReturn 1 5<CR>
-"    else
-"      inoremap <silent><buffer> <CR> <Esc>:VimwikiReturn 1 5<CR>
-"    endif
-"  endif
-
-let g:vimwiki_table_mappings = 0
-inoremap <expr> <S-Tab> getline('.') =~# '^\s*\*' ? '<c-d>' 
-        \ : getline('.') =~# '^\s*\|' ? vimwiki#tbl#kbd_shift_tab() 
-        \ : '<S-Tab>'
-inoremap <expr> <tab> getline('.') =~# '^\s*\*' ? '<c-t>' 
-        \ : getline('.') =~# '^\s*\|' ? vimwiki#tbl#kbd_tab() 
-        \ : '<tab>'
-
-" Remove trailing space before pressing <Return>
-inoremap <CR> <Esc>g_lDo
-
 " ctrl-g to add doxygen comment template using DoxygenToolkit plug-in 
 map <silent> <C-g> :Dox<CR>
 
@@ -831,11 +798,42 @@ endfunction
 
 setlocal foldtext=FoldText()
 
+" vimwiki maps tab and s-tab to do things in table. 
+" That is incorrect as it changes behavior in md file for every tab press
+" during insert mode. I will disable it through a global variable here 
+" and map it for table rows separately.
+" 
+" 
+"
+" From /Users/darshakg/.vim/vim_plug_downloads/vimwiki/ftplugin/vimwiki.vim
+"
+" if str2nr(vimwiki#vars#get_global('key_mappings').table_mappings)
+"   inoremap <expr><buffer> <Tab> vimwiki#tbl#kbd_tab()
+"   inoremap <expr><buffer> <S-Tab> vimwiki#tbl#kbd_shift_tab()
+" endif
+"  if maparg('<CR>', 'i') !~# '.*VimwikiReturn*.'
+"    if has('patch-7.3.489')
+"      " expand iabbrev on enter
+"      inoremap <silent><buffer> <CR> <C-]><Esc>:VimwikiReturn 1 5<CR>
+"    else
+"      inoremap <silent><buffer> <CR> <Esc>:VimwikiReturn 1 5<CR>
+"    endif
+"  endif
+
 let g:cur_buf_name=''
+let g:vimwiki_table_mappings = 0
 function! OpenMdBuffer()
-    " TODO: There is a extra space after last <CR> that gives that space for
-    " bullets, but also for lines which should not have bullets. Fix it.
-    inoremap <silent><buffer> <CR> <Space><Esc>g_lD<Esc>:VimwikiReturn 1 5<CR> 
+    inoremap <expr><buffer> <CR> getline('.') =~# '^\s*\*' ? 
+            \ '<Space><Esc>g_lD<Esc>:VimwikiReturn 1 5<CR> '
+            \ : getline('.') =~# '^\s*\|' ? vimwiki#tbl#kbd_cr() 
+            \ : '<CR>'
+    inoremap <expr><buffer> <S-Tab> getline('.') =~# '^\s*\*' ? '<c-d>' 
+            \ : getline('.') =~# '^\s*\|' ? vimwiki#tbl#kbd_shift_tab() 
+            \ : '<S-Tab>'
+    inoremap <expr><buffer> <tab> getline('.') =~# '^\s*\*' ? '<c-t>' 
+            \ : getline('.') =~# '^\s*\|' ? vimwiki#tbl#kbd_tab() 
+            \ : '<tab>'
+
     if(g:cur_buf_name != expand('%:p'))
         setlocal foldmethod=expr  
         setlocal foldexpr=MarkdownLevel()  
@@ -897,7 +895,6 @@ let g:taskwiki_markup_syntax = 'markdown'
 let g:indentLine_setConceal = 0
 
 
-
 function! PasteMdHyperlink()
     redir @"
     silent execute '!~/Library/Preferences/espanso/user/pastelink.sh'
@@ -944,6 +941,88 @@ command! CopyMatches call CopyMatches()
 
 nmap <silent> <Leader>wy :call CopyProject()<CR>
 command!  CopyProject call CopyProject()
+
+"-------------------------------------------------------------------------------
+" 16. FZF setup
+" Note: FZF preview works with bat. I am using TwoDark theme for bat as it works
+" OK for both light and dark background.
+"-------------------------------------------------------------------------------
+
+" [Buffers] Jump to the existing window if possible
+let g:fzf_buffers_jump = 1
+
+command! -bang -nargs=? -complete=dir Files
+    \ call fzf#vim#files(<q-args>, fzf#vim#with_preview({'options': ['--layout=reverse', '--info=inline']}), <bang>0)
+
+" Smart case means it will be case insensitive if input is all lower case, if
+" you put one upper case, it will switch to sensitive.
+command! -bang -nargs=* Rg
+  \ call fzf#vim#grep(
+  \   'rg --column --line-number --no-heading --no-ignore 
+  \  --color=always --ignore-case -- '.shellescape(<q-args>), 1,
+  \   fzf#vim#with_preview(), <bang>0)
+
+" In the default implementation of `Rg`, ripgrep process starts only once with
+" the initial query (e.g. `:Rg foo`) and fzf filters the output of the process.
+" 
+" This is okay in most cases because fzf is quite performant even with millions
+" of lines, but we can make fzf completely delegate its search responsibliity to
+" ripgrep process by making it restart ripgrep whenever the query string is
+" updated. In this scenario, fzf becomes a simple selector interface rather than
+" a "fuzzy finder".
+" 
+"  - We will name the new command all-uppercase `RG` so we can still access the
+"    default version.
+"  - `--bind 'change:reload:rg ... {q}'` will make fzf restart ripgrep process
+"    whenever the query string, denoted by `{q}`, is changed.
+"  - With `--phony` option, fzf will no longer perform search. The query string you
+"    type on fzf prompt is only used for restarting ripgrep process.
+"  - Also note that we enabled previewer with `fzf#vim#with_preview`.
+
+function! RipgrepFzf(query, fullscreen)
+  let command_fmt = 'rg --column --no-ignore --line-number --no-heading --color=always --ignore-case -- %s || true'
+  let initial_command = printf(command_fmt, shellescape(a:query))
+  let reload_command = printf(command_fmt, '{q}')
+  let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
+  call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
+endfunction
+
+command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
+
+" Mapping selecting mappings
+
+" list files recusrively, but better
+nmap <leader>ff :Files<CR>
+" git status, but better"
+nmap <leader>fg :GFiles?<CR>
+" RipGrep, better than VimGrep. Using the function version 
+nmap <leader>fr :RG<CR>
+" Lines in loaded buffers
+nmap <leader>fl :Lines<CR>
+" Lines in current buffer
+nmap <leader>f/ :BLines<CR>
+" Marks
+nmap <leader>f' :Marks<CR>
+" Buffer history
+nmap <leader>fb :History<CR>
+" Command history
+nmap <leader>fc :History:<CR>
+" Search history
+nmap <leader>fs :History/<CR>
+" Mappings
+
+nmap <leader>fm <plug>(fzf-maps-n)
+xmap <leader>fm <plug>(fzf-maps-x)
+omap <leader>fm <plug>(fzf-maps-o)
+" Help Tags
+nmap <leader>fh :Helptags<CR>
+
+" Insert mode completion
+imap <c-x><c-k> <plug>(fzf-complete-word)
+" imap <c-x><c-f> <plug>(fzf-complete-path)
+" Using rg for file completion
+inoremap <expr> <c-x><c-f> fzf#vim#complete#path('rg --files')
+imap <c-x><c-l> <plug>(fzf-complete-line)
 
 
 "-------------------------------------------------------------------------------
@@ -1061,87 +1140,3 @@ command!  CopyProject call CopyProject()
 " <space> mapped to za for normal mode
 
 " :reg command to scoop all registers
-
-"-------------------------------------------------------------------------------
-" 16. FZF setup
-" Note: FZF preview works with bat. I am using TwoDark theme for bat as it works
-" OK for both light and dark background.
-"-------------------------------------------------------------------------------
-
-" [Buffers] Jump to the existing window if possible
-let g:fzf_buffers_jump = 1
-
-command! -bang -nargs=? -complete=dir Files
-    \ call fzf#vim#files(<q-args>, fzf#vim#with_preview({'options': ['--layout=reverse', '--info=inline']}), <bang>0)
-
-" Smart case means it will be case insensitive if input is all lower case, if
-" you put one upper case, it will switch to sensitive.
-command! -bang -nargs=* Rg
-  \ call fzf#vim#grep(
-  \   'rg --column --line-number --no-heading --no-ignore 
-  \  --color=always --ignore-case -- '.shellescape(<q-args>), 1,
-  \   fzf#vim#with_preview(), <bang>0)
-
-" In the default implementation of `Rg`, ripgrep process starts only once with
-" the initial query (e.g. `:Rg foo`) and fzf filters the output of the process.
-" 
-" This is okay in most cases because fzf is quite performant even with millions
-" of lines, but we can make fzf completely delegate its search responsibliity to
-" ripgrep process by making it restart ripgrep whenever the query string is
-" updated. In this scenario, fzf becomes a simple selector interface rather than
-" a "fuzzy finder".
-" 
-"  - We will name the new command all-uppercase `RG` so we can still access the
-"    default version.
-"  - `--bind 'change:reload:rg ... {q}'` will make fzf restart ripgrep process
-"    whenever the query string, denoted by `{q}`, is changed.
-"  - With `--phony` option, fzf will no longer perform search. The query string you
-"    type on fzf prompt is only used for restarting ripgrep process.
-"  - Also note that we enabled previewer with `fzf#vim#with_preview`.
-
-function! RipgrepFzf(query, fullscreen)
-  let command_fmt = 'rg --column --no-ignore --line-number --no-heading --color=always --ignore-case -- %s || true'
-  let initial_command = printf(command_fmt, shellescape(a:query))
-  let reload_command = printf(command_fmt, '{q}')
-  let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
-  call fzf#vim#grep(initial_command, 1, fzf#vim#with_preview(spec), a:fullscreen)
-endfunction
-
-command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
-
-" Mapping selecting mappings
-
-" list files recusrively, but better
-nmap <leader>ff :Files<CR>
-" git status, but better"
-nmap <leader>fg :GFiles?<CR>
-" RipGrep, better than VimGrep. Using the function version 
-nmap <leader>fr :RG<CR>
-" Lines in loaded buffers
-nmap <leader>fl :Lines<CR>
-" Lines in current buffer
-nmap <leader>f/ :BLines<CR>
-" Marks
-nmap <leader>f' :Marks<CR>
-" Buffer history
-nmap <leader>fb :History<CR>
-" Command history
-nmap <leader>fc :History:<CR>
-" Search history
-nmap <leader>fs :History/<CR>
-" Mappings
-
-nmap <leader>fm <plug>(fzf-maps-n)
-xmap <leader>fm <plug>(fzf-maps-x)
-omap <leader>fm <plug>(fzf-maps-o)
-" Help Tags
-nmap <leader>fh :Helptags<CR>
-
-" Insert mode completion
-imap <c-x><c-k> <plug>(fzf-complete-word)
-" imap <c-x><c-f> <plug>(fzf-complete-path)
-" Using rg for file completion
-inoremap <expr> <c-x><c-f> fzf#vim#complete#path('rg --files')
-imap <c-x><c-l> <plug>(fzf-complete-line)
-
-

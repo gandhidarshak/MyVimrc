@@ -456,7 +456,6 @@ function! VisualSelection(direction) range
    if a:direction == 'b'
       execute "normal ?" . l:pattern . "^M"
    elseif a:direction == 'gv'
-      " let l:searchList = '$power1/**/*.h $power1/**/*.cxx $power2/**/*.h $power2/**/*.cxx $power4/power_compiler/**/*.py $power5/**/*.h $power5/**/*.cxx'
       let l:searchList = '~/VimWiki/*'
       call CmdLine("vimgrep " . '/'. l:pattern . '/gj' . l:searchList . ' <CR>')
       :tabnew
@@ -1079,7 +1078,8 @@ command! -bang -nargs=? -complete=dir Files
 " you put one upper case, it will switch to sensitive.
 command! -bang -nargs=* Rg
   \ call fzf#vim#grep(
-  \   'rg --column --line-number --no-heading --color=always --ignore-case -- '.shellescape(<q-args>), 1,
+  \   'rg --column --line-number --no-heading --no-ignore 
+  \  --color=always --ignore-case -- '.shellescape(<q-args>), 1,
   \   fzf#vim#with_preview(), <bang>0)
 
 " In the default implementation of `Rg`, ripgrep process starts only once with
@@ -1100,7 +1100,7 @@ command! -bang -nargs=* Rg
 "  - Also note that we enabled previewer with `fzf#vim#with_preview`.
 
 function! RipgrepFzf(query, fullscreen)
-  let command_fmt = 'rg --column --line-number --no-heading --color=always --ignore-case -- %s || true'
+  let command_fmt = 'rg --column --no-ignore --line-number --no-heading --color=always --ignore-case -- %s || true'
   let initial_command = printf(command_fmt, shellescape(a:query))
   let reload_command = printf(command_fmt, '{q}')
   let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}

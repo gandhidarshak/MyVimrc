@@ -30,9 +30,8 @@
 " 1. Opening/Saving vim, navigating, text, tab and indent settings
 "-------------------------------------------------------------------------------
 
-" Auto source vimrc upon every save! Disabling due to slowness.
-" autocmd BufWritePost vimrc,.bashrc source %
 
+set foldtext=FoldText()
 set noautowrite                " Turn off auto write in general
 set nocompatible               " Turn off vim compatibility with Vi.
 set history=50                " How many lines of command history VIM has to remember?
@@ -703,9 +702,9 @@ endfunction
 "-------------------------------------------------------------------------------
 " Auto Commands
 au! BufWritePre Generated\ Tags.md  call VimWikiTags()
-au! BufLeave *.md :write!
+au! BufLeave,FocusLost *.md :write!
 au! BufWinEnter,BufEnter *.md call SwitchToMdBuffer()
-au! BufAdd,BufRead,BufNewFile *.md call OpenMdBuffer()
+au! BufAdd,BufRead *.md call OpenMdBuffer()
 
 " Paste image from clipboard to a file. TODO: Move this to raycast.
 nmap <leader>a :call mdip#MarkdownClipboardImage()<CR>
@@ -771,32 +770,50 @@ endfunction
 " Created using : http://vimcasts.org/episodes/writing-a-custom-fold-expression/
 " extensions like vim markdown were failing for some reason so wrote a custom one.
 function! MarkdownLevel()
-    if getline(v:lnum) =~ '^# .*$'
-        return ">1"
+    if getline(v:lnum) =~ '^#.*$'
+        return '>' . MarkdownLogicalLevel(v:lnum)
+    elseif indent(v:lnum) < indent(v:lnum+1)
+        return '>' . MarkdownLogicalLevel(v:lnum+1)
+    else 
+        return MarkdownLogicalLevel(v:lnum)
     endif
-    if getline(v:lnum) =~ '^## .*$'
-        return ">2"
+endfunction
+
+function! MarkdownLogicalLevel(lnumber)
+    if a:lnumber == 1
+        return 1
     endif
-    if getline(v:lnum) =~ '^### .*$'
-        return ">3"
+    if getline(a:lnumber) =~ '^# .*$'
+        return "1"
     endif
-    if getline(v:lnum) =~ '^#### .*$'
-        return ">4"
+    if getline(a:lnumber) =~ '^## .*$'
+        return "2"
     endif
-    if getline(v:lnum) =~ '^##### .*$'
-        return ">5"
+    if getline(a:lnumber) =~ '^### .*$'
+        return "3"
     endif
-    if getline(v:lnum) =~ '^###### .*$'
-        return ">6"
+    if getline(a:lnumber) =~ '^#### .*$'
+        return "4"
     endif
-    return "=" 
+    if getline(a:lnumber) =~ '^##### .*$'
+        return "5"
+    endif
+    if getline(a:lnumber) =~ '^###### .*$'
+        return "6"
+    endif
+    if getline(a:lnumber) =~? '^\s*$'
+        return MarkdownLogicalLevel(a:lnumber-1) 
+    endif
+    let l:prev_indent = indent(a:lnumber - 1) / &shiftwidth
+    let l:this_indent = indent(a:lnumber) / &shiftwidth
+    let l:ans = l:this_indent - l:prev_indent + MarkdownLogicalLevel(a:lnumber-1)
+    return l:ans
 endfunction
 function! FoldText()
   let foldsize = (v:foldend-v:foldstart)
-  return getline(v:foldstart).' ('.foldsize.' lines)'
+  return getline(v:foldstart).' (+'.foldsize.' lines)'
 endfunction
 
-setlocal foldtext=FoldText()
 
 " vimwiki maps tab and s-tab to do things in table. 
 " That is incorrect as it changes behavior in md file for every tab press
@@ -823,37 +840,52 @@ setlocal foldtext=FoldText()
 let g:cur_buf_name=''
 let g:vimwiki_table_mappings = 0
 function! OpenMdBuffer()
-    inoremap <expr><buffer> <CR> getline('.') =~# '^\s*\*' ? 
+    " If List Iteam  => delete all spaces and start new list
+    " TODO: && Last Column => && col(".") == col("$")-1?
+    " If Table item => Table CR
+    " Else => Normal CR
+    inoremap <expr><buffer> <CR>
+            \ getline('.') =~# '^\s*\*'?
             \ '<Space><Esc>g_lD<Esc>:VimwikiReturn 1 5<CR> '
             \ : getline('.') =~# '^\s*\|' ? vimwiki#tbl#kbd_cr() 
             \ : '<CR>'
+    " If List Iteam  => Reduce indent
+    " If Table item => Move to previous cell
+    " Else => Normal S-Tab
     inoremap <expr><buffer> <S-Tab> getline('.') =~# '^\s*\*' ? '<c-d>' 
             \ : getline('.') =~# '^\s*\|' ? vimwiki#tbl#kbd_shift_tab() 
             \ : '<S-Tab>'
+    " If List Iteam  => Increase indent
+    " If Table item => Move to next cell
+    " Else => Normal Tab
     inoremap <expr><buffer> <tab> getline('.') =~# '^\s*\*' ? '<c-t>' 
             \ : getline('.') =~# '^\s*\|' ? vimwiki#tbl#kbd_tab() 
             \ : '<tab>'
 
     if(g:cur_buf_name != expand('%:p'))
-        setlocal foldmethod=expr  
-        setlocal foldexpr=MarkdownLevel()  
+        setlocal autoread
         setlocal foldenable
         setlocal textwidth=0
+        setlocal foldmethod=expr  
+        setlocal foldexpr=MarkdownLevel()  
+        setlocal foldlevel=1
         setlocal linebreak
         let g:prev_buf_name = g:cur_buf_name
         let g:cur_buf_name=expand('%:p')
         " echo g:prev_buf_name . "=>" . g:cur_buf_name
     endif
+
 endfunction
 function! SwitchToMdBuffer()
     if(g:cur_buf_name != expand('%:p'))
+        setlocal foldmethod=expr  
+        setlocal foldexpr=MarkdownLevel()  
         let g:prev_buf_name = g:cur_buf_name
         let g:cur_buf_name=expand('%:p')
         " echo g:prev_buf_name . "=>" . g:cur_buf_name
     endif
 endfunction
 
-au! FileType markdown setlocal foldlevel=1
 
 function! HighlightRepeats() range
   let lineCounts = {}
@@ -875,7 +907,7 @@ endfunction
 command! -range=% HighlightRepeats <line1>,<line2>call HighlightRepeats()
 
 function! VimWikiNoteTemplate()
-    call SwitchToMdBuffer()
+    call OpenMdBuffer()
     if (expand('%:p:h:t') != 'diary')
          silent execute '!~/.vim/templates/vimwiki_note_template.py ~/.vimwikitemplate' fnameescape(g:cur_buf_name) fnameescape(g:prev_buf_name) 
         silent 0r ~/.vimwikitemplate 
@@ -989,7 +1021,7 @@ endfunction
 
 command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
 
-" Mapping selecting mappings
+nnoremap <Leader>fv :tab drop $MYVIMRC <CR>
 
 " list files recusrively, but better
 nmap <leader>ff :Files<CR>

@@ -137,6 +137,7 @@ Plug 'vim-scripts/OmniCppComplete'      " Omni Complete for C++ Auto complete
 Plug 'Yggdroot/indentLine'              " Indent lines
 Plug 'stephpy/vim-yaml'                 " Yaml syntax
 Plug 'altercation/vim-colors-solarized' " Solarized theme
+Plug 'cormacrelf/vim-colors-github'     " github colors for vim
 Plug 'tomasr/molokai'                   " Molokai theme
 Plug 'jdkanani/vim-material-theme'      " Material theme
 Plug 'raimondi/delimitmate'             " Auto closing of quotes, brackets, etc.
@@ -145,6 +146,7 @@ Plug 'dracula/vim'                      " Dracula theme for vim
 Plug 'rickhowe/diffchar.vim'            " Highlight the exact differences, based on characters and words
 Plug 'terryma/vim-expand-region'        " visually select increasingly larger regions of text using the same key combination
 Plug 'tpope/vim-dispatch'               " Run :make and other tasks (grep etc) async from vim
+Plug 'tpope/vim-markdown'
 
 
 " Plug 'sheerun/vim-polyglot'             " A collection of language packs for all main languages. This seem to give errors for json for vim 7.4 or below so commenting it for now.
@@ -167,6 +169,14 @@ endif
 "-------------------------------------------------------------------------------
 " 3. Plug-in set-ups/flags for customization 
 "-------------------------------------------------------------------------------
+
+" use a slightly darker background, like GitHub inline code blocks
+let g:github_colors_soft = 1
+call github_colors#togglebg_map('<f5>')
+
+" more blocky diff markers in signcolumn (e.g. GitGutter)
+let g:github_colors_block_diffmark = 0
+
 
 " Justify text per textwidth. This is pre-installed in recent vim installs
 runtime macros/justify.vim
@@ -301,7 +311,7 @@ if has("gui_running")
    set guitablabel=%M\ %t
    set t_Co=256    " colors - use them all 
    set cursorline  " highlight current line
-   silent!  colorscheme desert
+   silent!  colorscheme material-theme
 else
    colorscheme desert  " for vim/vi terminal
 endif
@@ -311,7 +321,7 @@ endif
 "-------------------------------------------------------------------------------
 set background=dark
 " colorscheme names that I like to toggle between
-let s:mycolors = ['molokai' , 'solarized', 'dracula', 'desert', 'material-theme']
+let s:mycolors = ['github', 'molokai' , 'solarized', 'desert', 'material-theme']
 
 function! NextColor(how, echo_color)
    if exists('g:colors_name')
@@ -372,6 +382,18 @@ au FileType vb             inoremap <buffer> <C-l> '<ESC>:call  CLine()<CR>A
 " TODO
 " au FileType markdown nmap <buffer> A /\v( #\S+)*?$/
 " au FileType markdown nmap <buffer> A /\v( #\S+)*$/s<CR> <ESC>:nohl <CR> i
+
+" This will beautify yaml by making sure : is paded with exactly 1 space on each
+" side and Lists are tabularized
+function! BeautifyYaml()
+   if( &ft=="yaml" || &ft=="yml" || &ft=="config") 
+      :1,$s#\s*:\s*#:#
+      :1,$g#:\[# Tabularize /:\zs[
+      :1,$g#:\s*\[# Tabularize /,
+      :1,$g#:\s*\[# Tabularize /]
+      :1,$s#:# : #
+   endif
+endfunction
 
 " Beautify the comments using Ctrl-y
 au FileType c,cpp,cxx,h nnoremap <buffer> <c-y> /\v\/\/\-<CR><UP>vN<DOWN>    
@@ -658,43 +680,16 @@ map <F12> :DetectIndent <CR> :IndentLinesReset <CR> :verbose set shiftwidth? <CR
 if filereadable("/usr/share/dict/words")
    :set dictionary=/usr/share/dict/words
 endif 
-
-
-" vim dict completion
-" ctrl-n, ctrl-p - next/previous word completion 
-" ctrl-x ctrl-l  - line completion
-" ctrl-x ctrl-k  - dictionary completion
-" visual > or <  - indent block by sw (repeat with . )
-"
-" Spell check toggle
 :set nospell 
 nmap <silent> <F10> :set spell! spelllang=en_us<CR>
-inoremap <C-Space> <Esc>b[sve
-inoremap <C-@> <C-Space>
-nnoremap <C-Space> <Esc>b[sve
-nnoremap <C-@> <C-Space>
-vnoremap <C-Space> <Esc>b[sve
-vnoremap <C-@> <C-Space>
-snoremap <C-Space> <Esc>b[sve
-snoremap <C-@> <C-Space>
-" once on the spelling mistake word, 
-" replace first suggestion for it 1z
-" or open drop list and select 1st
-vnoremap <Space> <Esc>i<C-X><C-s>
+:nohl
 
-:nohl 
-
-" This will beautify yaml by making sure : is paded with exactly 1 space on each
-" side and Lists are tabularized
-function! BeautifyYaml()
-   if( &ft=="yaml" || &ft=="yml" || &ft=="config") 
-      :1,$s#\s*:\s*#:#
-      :1,$g#:\[# Tabularize /:\zs[
-      :1,$g#:\s*\[# Tabularize /,
-      :1,$g#:\s*\[# Tabularize /]
-      :1,$s#:# : #
-   endif
-endfunction
+" [s - Previous spelling mistake
+" ]s - Next spelling mistake
+" z= - Fix list
+" zg - Good word, add to local dictionary
+" zug - Undo adding current word to dictionary
+" zw - Wrong word, add as a mistake
 
 
 "-------------------------------------------------------------------------------
@@ -811,7 +806,7 @@ function! MarkdownLogicalLevel(lnumber)
 endfunction
 function! FoldText()
   let foldsize = (v:foldend-v:foldstart)
-  return getline(v:foldstart).' (+'.foldsize.' lines)'
+  return getline(v:foldstart).'   (+'.foldsize.' lines) '
 endfunction
 
 
@@ -868,6 +863,8 @@ function! OpenMdBuffer()
         setlocal textwidth=0
         setlocal foldmethod=expr  
         setlocal foldexpr=MarkdownLevel()  
+        " Removes the ugle ----- at end of foldtext
+        setlocal fillchars=fold:\ 
         setlocal foldlevel=1
         setlocal linebreak
         let g:prev_buf_name = g:cur_buf_name
@@ -1023,12 +1020,13 @@ command! -nargs=* -bang RG call RipgrepFzf(<q-args>, <bang>0)
 
 nnoremap <Leader>fv :tab drop $MYVIMRC <CR>
 
-" list files recusrively, but better
+" list files recursively, but better
 nmap <leader>ff :Files<CR>
 " git status, but better"
 nmap <leader>fg :GFiles?<CR>
-" RipGrep, better than VimGrep. Using the function version 
-nmap <leader>fr :RG<CR>
+" RipGrep, better than VimGrep. Not using the function version as it doesn't do
+" fuzzy search properly. Like AAA BBB CCC will not come up for AA CCC
+nmap <leader>fr :Rg<CR>
 " Lines in loaded buffers
 nmap <leader>fl :Lines<CR>
 " Lines in current buffer
@@ -1172,3 +1170,4 @@ imap <c-x><c-l> <plug>(fzf-complete-line)
 " <space> mapped to za for normal mode
 
 " :reg command to scoop all registers
+

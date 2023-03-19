@@ -77,7 +77,7 @@ Below bind-keys will be readily available once you install the vimrc.
       
       ctrl-up    : Increase font size while maintaining window size
       ctrl-down  : Decrease font size while maintaining window size
-      ctrl-space : Go to previous spell check error
+      [s : Go to previous spell check error
       ctrl-F9    : Iterate backwards in themes
       
       ]c  : Next difference

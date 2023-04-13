@@ -359,15 +359,15 @@ endfunction
 " 7. File type dependent commenting 
 "-------------------------------------------------------------------------------
 
-au FileType c,cpp,cxx,h setlocal comments+=sl:/*,mb:*,elx:*/
+au FileType c,cpp,cxx,h,cc setlocal comments+=sl:/*,mb:*,elx:*/
 au FileType tcl,python,csh setlocal comments+=:# 
 function! CLine()
    normal 80A-d80|o80A-d80|O 
 endfunction
 
 " Note-  :set filetype? to know a filetype
-au FileType c,cpp,cxx,h    imap     <buffer> <C-l> //<ESC>:call CLine()<CR>A
-au FileType c,cpp,cxx,h    inoremap <buffer> <C-l> //<ESC>:call CLine()<CR>A
+au FileType c,cpp,cxx,h,cc imap     <buffer> <C-l> //<ESC>:call CLine()<CR>A
+au FileType c,cpp,cxx,h,cc inoremap <buffer> <C-l> //<ESC>:call CLine()<CR>A
 au FileType python,tcl,csh imap     <buffer> <C-l> #<ESC>:call  CLine()<CR>A
 au FileType python,tcl,csh inoremap <buffer> <C-l> #<ESC>:call  CLine()<CR>A
 au FileType vim            imap     <buffer> <C-l> "<ESC>:call  CLine()<CR>A
@@ -396,7 +396,7 @@ function! BeautifyYaml()
 endfunction
 
 " Beautify the comments using Ctrl-y
-au FileType c,cpp,cxx,h nnoremap <buffer> <c-y> /\v\/\/\-<CR><UP>vN<DOWN>    
+au FileType c,cpp,cxx,cc,h nnoremap <buffer> <c-y> /\v\/\/\-<CR><UP>vN<DOWN>    
          \:s/\/\/.*\zs \+\ze/ /gi<CR>
          \/\v\/\/\-<CR><UP>N<DOWN>=                    
          \/\v\/\/\-<CR><UP>vN<DOWN>     
@@ -611,8 +611,8 @@ map <silent> <C-b> :windo set scb!<CR>
 
 
 
-" ctrl-h to switch between header and cxx file in same directory
-nmap <C-h> :e %:p:s,.h$,.X123X,:s,.cxx$,.h,:s,.X123X$,.cxx,<CR>
+" ctrl-h to switch between header and cc file in same directory
+nmap <C-h> :e %:p:s,.h$,.X123X,:s,.cc$,.h,:s,.X123X$,.cc,<CR>
 
 " ctrl-k to break Function arguments in new lines
 nmap <C-k> :s/[^\<.*,.*\>]\zs,\ze/,\r/g <CR>v?(<CR>= :nohl<CR>
